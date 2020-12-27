@@ -1,0 +1,102 @@
+run-type: server
+
+# trojan-go listen address and port
+local-addr: "0.0.0.0"
+local-port: 1443
+
+# custom http server (caddy)
+remote-addr: __CADDY__
+remote-port: 8080
+
+log-level: 0
+log-file: ""
+password:
+- example_password
+
+disable-http-check: false
+udp-timeout: 60
+ssl:
+  verify: true
+  verify-hostname: true
+  cert: /opt/certs/${SRV_HOSTNAME}/${SRV_HOSTNAME}.crt
+  key: /opt/certs/${SRV_HOSTNAME}/${SRV_HOSTNAME}.key
+  # key-password: ""
+  # cipher: TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384
+  # prefer-server-cipher: true
+  alpn:
+  - http/1.1
+  session-ticket: false
+  reuse-session: true
+
+  # plain-http-response: ""
+  # fallback-addr: ""
+  # fallback-port: 0
+  # fingerprint: "firefox"
+  # curves: ""
+  # sni: ""
+
+tcp:
+  no-delay: true
+  keep-alive: true
+  prefer-ipv4: false
+
+api:
+  enabled: false
+  api-addr: ""
+  api-port: 0
+  ssl:
+    enabled: false
+    key: ""
+    cert: ""
+    verify-client: false
+    client-cert: []
+
+# websocket:
+#   enabled: false
+#   path: ""
+#   host: ""
+
+# shadowsocks:
+#   enabled: false
+#   method: "AES-128-GCM"
+#   password: ""
+
+# transport-plugin:
+#   enabled: false
+#   type: ""
+#   command: ""
+#   option: ""
+#   arg: []
+#   env: []
+
+# mysql:
+#   enabled: false
+#   server-addr: "localhost"
+#   server-port: 3306
+#   database: ""
+#   username: ""
+#   password: ""
+#   check-rate: 60
+
+# # client specific config
+# mux:
+#   enabled: false
+#   concurrency: 8
+#   idle-timeout: 60
+
+# router:
+#   enabled: false
+#   bypass: []
+#   proxy: []
+#   block: []
+#   default-policy: "proxy"
+#   domain-strategy: "as-is"
+#   geoip: "$PROGRAM-DIR$/geoip.dat"
+#   geosite: "$PROGRAM-DIR$/geosite.dat"
+
+# forward-proxy:
+#   enabled: false
+#   proxy-addr: ""
+#   proxy-port: 0
+#   username: ""
+#   password: ""

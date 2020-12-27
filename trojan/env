@@ -1,0 +1,4 @@
+SRV_HOSTNAME=trojan.example.com
+REDIRECT_TO=normal.example.com
+
+ACME_EMAIL=foo@example.com

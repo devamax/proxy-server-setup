@@ -1,0 +1,47 @@
+services:
+  caddy:
+    restart: always
+    image: docker.io/library/caddy:2.2.1-alpine
+    env_file:
+    - env
+    environment:
+    # ensure caddy write certs to /opt/caddy/certificates
+    - XDG_DATA_HOME=/opt
+    # NOTE: use acme-staging-v02.api.letsencrypt.org when testing
+    - ACME_CA_DIRECTORY_URL=https://acme-v02.api.letsencrypt.org/directory
+    ports:
+    - 80:8080
+    volumes:
+    - ${PWD}/Caddyfile:/etc/caddy/Caddyfile
+    # need to update `acme-v02.api.letsencrypt.org-directory` according to
+    # ACME_CA_DIRECTORY_URL
+    - ${PWD}/certs:/opt/caddy/certificates/acme-v02.api.letsencrypt.org-directory/
+
+  trojan:
+    restart: always
+    image: docker.io/p4gefau1t/trojan-go:v0.8.2
+    env_file:
+    - env
+    entrypoint:
+    - sh
+    - -c
+    command:
+    - |
+      set -e
+
+      (
+        echo "cat <<EOF"
+        cat "/etc/trojan-go/config-origin.yaml"
+        echo "EOF"
+      ) | sh > /etc/trojan-go/config.yaml
+
+      exec /usr/local/bin/trojan-go -config /etc/trojan-go/config.yaml
+    ports:
+    - 443:1443
+    volumes:
+    - ${PWD}/trojan-server.yaml:/etc/trojan-go/config-origin.yaml
+    - ${PWD}/certs:/opt/certs/
+    links:
+    - caddy:__CADDY__
+    depends_on:
+    - caddy

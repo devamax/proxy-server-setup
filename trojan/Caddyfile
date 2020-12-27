@@ -1,0 +1,11 @@
+{
+    http_port   8080
+    https_port  8443
+
+    acme_ca {$ACME_CA_DIRECTORY_URL}
+    email {$ACME_EMAIL}
+}
+
+{$SRV_HOSTNAME} {
+    reverse_proxy * {$REDIRCT_TO}:443
+}
